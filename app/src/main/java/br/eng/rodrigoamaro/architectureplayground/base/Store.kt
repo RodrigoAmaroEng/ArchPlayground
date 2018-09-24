@@ -1,11 +1,11 @@
 package br.eng.rodrigoamaro.architectureplayground.base
 
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
+import com.jakewharton.rxrelay2.BehaviorRelay
 
 interface Store<S : State> {
-    val reducerList :List<Reducer<S>>
+    val middlewareList: List<Middleware<S>>
+    val reducerList: List<Reducer<S>>
     val initialState: S
     fun dispatch(action: Action)
-    fun listenAt(observer: Consumer<S>): Disposable
+    fun listen(): BehaviorRelay<S>
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <animated-rotate
+            android:pivotX="50%"
+            android:pivotY="50%">
+            <shape
+                android:innerRadius="58dp"
+                android:shape="ring"
+                android:thickness="0sp"
+                android:useLevel="false">
+                <stroke
+                    android:width="8dp"
+                    android:color="@color/colorPrimaryDark"
+                    android:dashGap="20dp"
+                    android:dashWidth="20dp"/>
+            </shape>
+        </animated-rotate>
+    </item>
+</layer-list>
