@@ -2,7 +2,7 @@ package br.eng.rodrigoamaro.architectureplayground
 
 import br.eng.rodrigoamaro.architectureplayground.base.*
 
-class CoffeeCounterReducer : Reducer {
+class CoffeeCounterReducer : Reducer<AppState> {
     override fun reduce(action: Action, state: AppState): AppState {
         val coffees = when (action) {
             AddCoffeeAction -> state.coffees + 1
