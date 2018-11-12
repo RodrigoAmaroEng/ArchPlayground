@@ -10,4 +10,6 @@ object PayAction : Action()
 
 object PayCompletedAction : Action()
 
+object PayFailedAction : Action()
+
 object NewSaleAction : Action()

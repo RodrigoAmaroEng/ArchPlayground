@@ -1,18 +1,14 @@
 package br.eng.rodrigoamaro.architectureplayground
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import br.eng.rodrigoamaro.architectureplayground.base.Interactor
+import org.koin.standalone.StandAloneContext
 import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
 
-    private val store = SimpleStore(
-            listOf(PaymentMiddleware()),
-            listOf(PaymentReducer(), CounterReducer(), CashReducer(BigDecimal(2.50))),
-            SaleState(money { currency = "R$" }, 0)
-    )
+    private val store = PaymentStore()
 
     private lateinit var interactor: Interactor
 
@@ -28,6 +24,11 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 }
+
+class PaymentStore : SimpleStore<SaleState>(
+        listOf(PaymentMiddleware(StandAloneContext.getKoin().koinContext.get())),
+        listOf(PaymentReducer(), CounterReducer(), CashReducer(BigDecimal(2.50))),
+        SaleState(money { currency = "R$" }, 0))
 
 
 

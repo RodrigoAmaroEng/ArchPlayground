@@ -7,26 +7,32 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.experimental.delay
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext
 
 
 @RunWith(AndroidJUnit4::class)
 class Fixtures {
 
+    private val mockedPaymentService = object : PaymentService {
+        override suspend fun pay(invoice: SaleState) {
+        }
+    }
+
     @Test
     fun tryToBuySomeCoffee() {
+        StandAloneContext.getKoin().loadModules(listOf(
+                module(override = true) { single<PaymentService> { mockedPaymentService } }
+        ))
         ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.button_increase)).perform(ViewActions.click())
         onView(withText("1")).check(isVisible())
         onView(withText("Pagar")).perform(ViewActions.click())
-        suspend {
-            delay(5000)
-            onView(withText("Transação concluída!")).check(isVisible())
-        }
+        onView(withText("Transação concluída!")).check(isVisible())
 
     }
 

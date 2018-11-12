@@ -1,18 +1,15 @@
 package br.eng.rodrigoamaro.architectureplayground
 
-import br.eng.rodrigoamaro.architectureplayground.base.Action
-import br.eng.rodrigoamaro.architectureplayground.base.Middleware
-import br.eng.rodrigoamaro.architectureplayground.base.Reducer
-import br.eng.rodrigoamaro.architectureplayground.base.Store
+import br.eng.rodrigoamaro.architectureplayground.base.*
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
 
-class SimpleStore(
-        override val middlewareList: List<Middleware<SaleState>>,
-        override val reducerList: List<Reducer<SaleState>>,
-        override val initialState: SaleState
-) : Store<SaleState> {
-    private val currentState: BehaviorRelay<SaleState> = BehaviorRelay.create()
+open class SimpleStore<T : State>(
+        override val middlewareList: List<Middleware<T>>,
+        override val reducerList: List<Reducer<T>>,
+        override val initialState: T
+) : Store<T> {
+    private val currentState: BehaviorRelay<T> = BehaviorRelay.create()
 
     init {
         currentState.accept(initialState)
