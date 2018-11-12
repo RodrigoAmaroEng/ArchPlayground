@@ -1,7 +1,8 @@
 package br.eng.rodrigoamaro.architectureplayground
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import br.eng.rodrigoamaro.architectureplayground.base.Interactor
 import java.math.BigDecimal
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 }
+
 
 
 

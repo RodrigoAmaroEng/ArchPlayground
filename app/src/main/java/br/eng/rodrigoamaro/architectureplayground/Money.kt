@@ -4,7 +4,7 @@ import java.math.BigDecimal
 
 data class Money(
         var currency: String = "$",
-        var amount: BigDecimal = BigDecimal.ZERO
+        var amount: BigDecimal = BigDecimal.ZERO.setScale(2)
 ) {
     fun value() = "$currency $amount"
 }
