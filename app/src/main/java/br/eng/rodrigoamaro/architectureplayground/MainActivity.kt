@@ -3,13 +3,12 @@ package br.eng.rodrigoamaro.architectureplayground
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.eng.rodrigoamaro.architectureplayground.base.Interactor
-import org.koin.standalone.StandAloneContext
-import java.math.BigDecimal
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), KoinComponent {
 
-    private val store = PaymentStore()
-
+    private val store = PaymentStore(get(), get())
     private lateinit var interactor: Interactor
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +24,9 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class PaymentStore : SimpleStore<SaleState>(
-        listOf(PaymentMiddleware(StandAloneContext.getKoin().koinContext.get())),
-        listOf(PaymentReducer(), CounterReducer(), CashReducer(BigDecimal(2.50))),
-        SaleState(money { currency = "R$" }, 0))
-
+class PaymentStore(settings: Settings, service: PaymentService) : SimpleStore<SaleState>(
+        listOf(PaymentMiddleware(service)),
+        listOf(PaymentReducer(), CounterReducer(), CashReducer(settings.coffeePrice)), SaleState())
 
 
 

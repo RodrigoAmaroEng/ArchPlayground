@@ -1,14 +1,19 @@
 package br.eng.rodrigoamaro.architectureplayground
 
+import android.preference.PreferenceManager
 import android.view.View
+import androidx.test.InstrumentationRegistry
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.mockk.coEvery
+import io.mockk.mockk
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.dsl.module.module
@@ -18,22 +23,33 @@ import org.koin.standalone.StandAloneContext
 @RunWith(AndroidJUnit4::class)
 class Fixtures {
 
-    private val mockedPaymentService = object : PaymentService {
-        override suspend fun pay(invoice: SaleState) {
-        }
+    private val mockedPaymentService: PaymentService = mockk()
+
+    @Before
+    fun setUp() {
+        coEvery { mockedPaymentService.pay(any()) } returns Unit
+        StandAloneContext.getKoin().loadModules(listOf(
+                module { single(override = true) { mockedPaymentService } }
+        ))
     }
 
     @Test
     fun tryToBuySomeCoffee() {
-        StandAloneContext.getKoin().loadModules(listOf(
-                module(override = true) { single<PaymentService> { mockedPaymentService } }
-        ))
         ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.button_increase)).perform(ViewActions.click())
         onView(withText("1")).check(isVisible())
         onView(withText("Pagar")).perform(ViewActions.click())
         onView(withText("Transação concluída!")).check(isVisible())
+    }
 
+    @Test
+    fun newCoffeePrice() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
+        preferences.edit().putInt("COFFEE_PRICE", 150).apply()
+        ActivityScenario.launch(MainActivity::class.java)
+        onView(withId(R.id.button_increase)).perform(ViewActions.click())
+        onView(withId(R.id.button_increase)).perform(ViewActions.click())
+        onView(withText("R$ 3.00")).check(isVisible())
     }
 
     private fun isVisible() = ViewAssertion { view, _ -> assertThat(view, VisibilityMatcher(View.VISIBLE)) }
