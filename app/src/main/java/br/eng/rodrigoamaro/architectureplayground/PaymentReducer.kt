@@ -8,6 +8,7 @@ class PaymentReducer : Reducer<SaleState> {
         return when (action) {
             PayAction -> state.copy(status = Status.PROCESSING)
             PayCompletedAction -> state.copy(status = Status.COMPLETED)
+            PayFailedAction -> state.copy(status = Status.FAILED)
             NewSaleAction -> SaleState(Money("R$"), 0)
             else -> state
         }

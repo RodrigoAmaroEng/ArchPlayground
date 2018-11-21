@@ -6,7 +6,10 @@ import br.eng.rodrigoamaro.architectureplayground.base.Store
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class PaymentMiddleware(private val service: PaymentService) : Middleware<SaleState> {
+class PaymentMiddleware(
+        private val service: PaymentService,
+        private val launcher: CoLauncher
+) : Middleware<SaleState> {
     override fun dispatch(action: Action, store: Store<SaleState>): Action {
         if (action == PayAction)
             GlobalScope.launch {

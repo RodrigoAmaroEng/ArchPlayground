@@ -1,14 +1,15 @@
 package br.eng.rodrigoamaro.architectureplayground
 
-import kotlinx.coroutines.delay
-
 
 interface PaymentService {
     suspend fun pay(invoice: SaleState)
 }
 
-class PaymentServiceImpl : PaymentService {
+class PaymentServiceImpl(private val api: Api) : PaymentService {
     override suspend fun pay(invoice: SaleState) {
-        delay(3000)
+        val result = api.payForCoffee().await()
+        if (!result.isSuccessful) {
+            throw IllegalStateException()
+        }
     }
 }

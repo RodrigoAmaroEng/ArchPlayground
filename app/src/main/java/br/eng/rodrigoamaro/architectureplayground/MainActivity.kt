@@ -8,7 +8,7 @@ import org.koin.standalone.get
 
 class MainActivity : AppCompatActivity(), KoinComponent {
 
-    private val store = PaymentStore(get(), get())
+    private val store = PaymentStore(get(), get(), get())
     private lateinit var interactor: Interactor
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity(), KoinComponent {
     }
 }
 
-class PaymentStore(settings: Settings, service: PaymentService) : SimpleStore<SaleState>(
-        listOf(PaymentMiddleware(service)),
+class PaymentStore(settings: Settings, service: PaymentService, launcher: CoLauncher) : SimpleStore<SaleState>(
+        listOf(PaymentMiddleware(service, launcher)),
         listOf(PaymentReducer(), CounterReducer(), CashReducer(settings.coffeePrice)), SaleState())
 
 
