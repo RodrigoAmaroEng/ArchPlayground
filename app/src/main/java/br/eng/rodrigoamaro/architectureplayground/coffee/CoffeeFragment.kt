@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.lifecycle.ViewModelProviders
 import br.eng.rodrigoamaro.architectureplayground.R
 import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
 
@@ -14,14 +14,14 @@ class CoffeeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_coffees, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val act = activity as MainActivity
-        interactor = CoffeeInteractor(act.store, view, NavHostFragment.findNavController(this))
+        val model = ViewModelProviders.of(this).get(ViewState::class.java)
+        interactor = CoffeeInteractor(act.store, view, model)
         interactor.turnOn()
     }
 
@@ -29,4 +29,5 @@ class CoffeeFragment : Fragment() {
         interactor.turnOff()
         super.onDestroyView()
     }
+
 }

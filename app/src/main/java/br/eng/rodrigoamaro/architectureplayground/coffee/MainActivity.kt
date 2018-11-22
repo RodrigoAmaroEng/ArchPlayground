@@ -12,13 +12,14 @@ import org.koin.standalone.get
 
 class MainActivity : AppCompatActivity(), KoinComponent {
 
-    val store = PaymentStore(get(), get(), get())
-
     private val navigator = NavHostFragment.create(R.navigation.navigation_flow)
+
+    lateinit var store: PaymentStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        store = PaymentStore(get(), get(), get(), navigator)
         supportFragmentManager.beginTransaction()
                 .replace(R.id.my_nav_host_fragment, navigator)
                 .setPrimaryNavigationFragment(navigator) // this is the equivalent to app:defaultNavHost="true"
@@ -28,8 +29,8 @@ class MainActivity : AppCompatActivity(), KoinComponent {
 
 }
 
-class PaymentStore(settings: Settings, service: PaymentService, launcher: CoLauncher) : SimpleStore<SaleState>(
-        listOf(PaymentMiddleware(service, launcher)),
+class PaymentStore(settings: Settings, service: PaymentService, launcher: CoLauncher, navHost: NavHostFragment) : SimpleStore<SaleState>(
+        listOf(PaymentMiddleware(service, launcher), NavigatorMiddleware(navHost)),
         listOf(PaymentReducer(), CounterReducer(), CashReducer(settings.coffeePrice), FlowReducer()), SaleState())
 
 

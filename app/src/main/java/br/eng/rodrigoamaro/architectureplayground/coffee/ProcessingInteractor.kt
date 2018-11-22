@@ -7,7 +7,7 @@ import br.eng.rodrigoamaro.architectureplayground.R
 import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
 import br.eng.rodrigoamaro.architectureplayground.base.Store
 
-class ProcessingInteractor(store: Store<SaleState>, view: View)
+class ProcessingInteractor(store: Store<SaleState>, view: View, private val viewState: ViewState)
     : SimpleInteractor<SaleState>(store) {
 
     private val imageStatus: ImageView = view.findViewById(R.id.image_status)
@@ -15,9 +15,11 @@ class ProcessingInteractor(store: Store<SaleState>, view: View)
 
     init {
         imageStatus.setImageResource(R.drawable.loading)
+        viewState.manageState(store)
     }
 
     override fun accept(state: SaleState) {
+        viewState.currentState = state
         if (state.status == Status.COMPLETED)
             success()
         else if (state.status == Status.FAILED)

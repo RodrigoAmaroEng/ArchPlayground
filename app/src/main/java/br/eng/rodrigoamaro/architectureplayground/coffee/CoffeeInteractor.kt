@@ -3,13 +3,15 @@ package br.eng.rodrigoamaro.architectureplayground.coffee
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.NavController
 import br.eng.rodrigoamaro.architectureplayground.R
 import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
 import br.eng.rodrigoamaro.architectureplayground.base.Store
 import com.jakewharton.rxbinding2.view.RxView
 
-class CoffeeInteractor(store: Store<SaleState>, view: View, private val navigator: NavController)
+class CoffeeInteractor(
+        store: Store<SaleState>,
+        view: View,
+        private val viewState: ViewState)
     : SimpleInteractor<SaleState>(store) {
 
     private val coffeeCounter: TextView = view.findViewById(R.id.coffee_counter)
@@ -21,18 +23,17 @@ class CoffeeInteractor(store: Store<SaleState>, view: View, private val navigato
     init {
         handle(RxView.clicks(decreaseButton).map { RemoveCoffeeAction })
         handle(RxView.clicks(increaseButton).map { AddCoffeeAction })
-        handle(RxView.clicks(paymentButton).map { SetCoffeesAction })
+        handle(RxView.clicks(paymentButton).map { NavigateAction(R.id.to_payment_method_screen) })
+        viewState.manageState(store)
     }
 
     override fun accept(state: SaleState) {
+        viewState.currentState = state
         coffeeCounter.text = state.coffees.toString()
         coffeeCost.text = state.amount.value()
         paymentButton.isEnabled = state.coffees > 0 && state.status != Status.PROCESSING
         decreaseButton.isEnabled = state.coffees > 0 && state.status == Status.READY_TO_SALE
         increaseButton.isEnabled = state.status == Status.READY_TO_SALE
-        if (state.status == Status.PAYMENT_METHOD) {
-            navigator.navigate(R.id.to_payment_method_screen)
-        }
     }
 
 }

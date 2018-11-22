@@ -26,10 +26,7 @@ open class SimpleStore<T : State>(
                                 reducer.reduce(act, state)
                             }
                 }
-                .doOnSuccess {
-                    println("Accepting")
-                    currentState.accept(it)
-                }
+                .doOnSuccess { currentState.accept(it) }
                 .subscribe()
     }
 }
