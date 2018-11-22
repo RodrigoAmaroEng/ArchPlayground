@@ -1,4 +1,4 @@
-package br.eng.rodrigoamaro.architectureplayground
+package br.eng.rodrigoamaro.architectureplayground.coffee
 
 import kotlinx.coroutines.Deferred
 import retrofit2.Response

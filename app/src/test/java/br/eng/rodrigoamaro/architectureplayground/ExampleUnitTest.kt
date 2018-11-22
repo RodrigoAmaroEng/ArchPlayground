@@ -11,6 +11,9 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import br.eng.rodrigoamaro.architectureplayground.coffee.MainActivity
+import br.eng.rodrigoamaro.architectureplayground.coffee.PaymentService
+import br.eng.rodrigoamaro.architectureplayground.coffee.PaymentServiceImpl
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
@@ -53,7 +56,8 @@ class Fixtures {
         ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.button_increase)).perform(ViewActions.click())
         onView(withText("1")).check(isVisible())
-        onView(withText("Pagar")).perform(ViewActions.click())
+        onView(withText("Continuar")).perform(ViewActions.click())
+        onView(withText("Débito")).perform(ViewActions.click())
         onView(withText("Transação concluída!")).check(isVisible())
     }
 
@@ -75,7 +79,8 @@ class Fixtures {
         server.enqueue(MockResponse().setResponseCode(200).setBody("{\"orderNumber\":\"1234\"}"))
         ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.button_increase)).perform(ViewActions.click())
-        onView(withText("Pagar")).perform(ViewActions.click())
+        onView(withText("Continuar")).perform(ViewActions.click())
+        onView(withText("Crédito")).perform(ViewActions.click())
         onView(withText("Transação concluída!")).check(isVisible())
     }
 
@@ -87,7 +92,8 @@ class Fixtures {
         server.enqueue(MockResponse().setResponseCode(406).setBody(""))
         ActivityScenario.launch(MainActivity::class.java)
         onView(withId(R.id.button_increase)).perform(ViewActions.click())
-        onView(withText("Pagar")).perform(ViewActions.click())
+        onView(withText("Continuar")).perform(ViewActions.click())
+        onView(withText("Voucher")).perform(ViewActions.click())
         onView(withText("Transação não completada!")).check(isVisible())
     }
 

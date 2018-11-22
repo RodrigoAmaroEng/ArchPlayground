@@ -1,4 +1,4 @@
-package br.eng.rodrigoamaro.architectureplayground
+package br.eng.rodrigoamaro.architectureplayground.coffee
 
 
 interface PaymentService {

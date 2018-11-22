@@ -1,6 +1,8 @@
-package br.eng.rodrigoamaro.architectureplayground
+package br.eng.rodrigoamaro.architectureplayground.coffee
 
+import br.eng.rodrigoamaro.architectureplayground.Money
 import br.eng.rodrigoamaro.architectureplayground.base.State
+import br.eng.rodrigoamaro.architectureplayground.money
 
 data class SaleState(
         val amount: Money = money { currency = "R$" },
@@ -10,6 +12,7 @@ data class SaleState(
 
 enum class Status {
     READY_TO_SALE,
+    PAYMENT_METHOD,
     PROCESSING,
     FAILED,
     COMPLETED

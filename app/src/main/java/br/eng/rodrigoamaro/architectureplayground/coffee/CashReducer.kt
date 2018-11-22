@@ -1,5 +1,6 @@
-package br.eng.rodrigoamaro.architectureplayground
+package br.eng.rodrigoamaro.architectureplayground.coffee
 
+import br.eng.rodrigoamaro.architectureplayground.Money
 import br.eng.rodrigoamaro.architectureplayground.base.Action
 import br.eng.rodrigoamaro.architectureplayground.base.Reducer
 import java.math.RoundingMode

@@ -3,10 +3,13 @@ package br.eng.rodrigoamaro.architectureplayground
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import br.eng.rodrigoamaro.architectureplayground.coffee.Api
+import br.eng.rodrigoamaro.architectureplayground.coffee.PaymentService
+import br.eng.rodrigoamaro.architectureplayground.coffee.PaymentServiceImpl
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext.closeKoin
+import org.koin.standalone.StandAloneContext.stopKoin
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -28,7 +31,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        closeKoin()
+        stopKoin()
         startKoin(this, listOf(module))
     }
 }
