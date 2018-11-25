@@ -9,6 +9,9 @@ jacoco {
 }
 
 android {
+    jacoco {
+        version = '0.8.2'
+    }
     compileSdkVersion 28
     testOptions.unitTests.includeAndroidResources = true
     testOptions.unitTests.returnDefaultValues = true
@@ -75,14 +78,14 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['connectedAndroidTest', 'c
         html.enabled = true
     }
 
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$dispatch$*.*', '**/*$1.*', '**/*$2.*', '**/*$3.*']
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$dispatch$*.*']
     def debugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
     def mainSrc = "$project.projectDir/src/main/java"
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
     executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/**/*coverage.ec'
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/**/*.ec'
     ])
 }
 
