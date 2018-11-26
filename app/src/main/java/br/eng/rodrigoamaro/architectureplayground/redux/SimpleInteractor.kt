@@ -1,9 +1,5 @@
-package br.eng.rodrigoamaro.architectureplayground
+package br.eng.rodrigoamaro.architectureplayground.redux
 
-import br.eng.rodrigoamaro.architectureplayground.base.Action
-import br.eng.rodrigoamaro.architectureplayground.base.Interactor
-import br.eng.rodrigoamaro.architectureplayground.base.State
-import br.eng.rodrigoamaro.architectureplayground.base.Store
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

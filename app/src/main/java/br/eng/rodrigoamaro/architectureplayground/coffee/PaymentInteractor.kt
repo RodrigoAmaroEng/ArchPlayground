@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.Button
 import br.eng.rodrigoamaro.architectureplayground.Methods
 import br.eng.rodrigoamaro.architectureplayground.R
-import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
-import br.eng.rodrigoamaro.architectureplayground.base.Store
+import br.eng.rodrigoamaro.architectureplayground.redux.SimpleInteractor
+import br.eng.rodrigoamaro.architectureplayground.redux.Store
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 
@@ -45,6 +45,7 @@ class PaymentInteractor(
     }
 
     override fun accept(state: SaleState?) {
+        println("PaymentInteractor.accept CURRENT_STATE: Accepting State")
         viewState.currentState = state
     }
 }

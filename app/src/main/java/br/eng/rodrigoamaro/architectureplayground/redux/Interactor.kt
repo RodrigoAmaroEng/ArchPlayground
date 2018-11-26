@@ -1,4 +1,4 @@
-package br.eng.rodrigoamaro.architectureplayground.base
+package br.eng.rodrigoamaro.architectureplayground.redux
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

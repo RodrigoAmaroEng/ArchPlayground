@@ -2,7 +2,7 @@ package br.eng.rodrigoamaro.architectureplayground.coffee
 
 import androidx.annotation.IdRes
 import br.eng.rodrigoamaro.architectureplayground.Methods
-import br.eng.rodrigoamaro.architectureplayground.base.Action
+import br.eng.rodrigoamaro.architectureplayground.redux.Action
 
 object AddCoffeeAction : Action()
 object RemoveCoffeeAction : Action()

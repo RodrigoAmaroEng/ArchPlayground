@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import br.eng.rodrigoamaro.architectureplayground.R
-import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
-import br.eng.rodrigoamaro.architectureplayground.base.Store
+import br.eng.rodrigoamaro.architectureplayground.redux.SimpleInteractor
+import br.eng.rodrigoamaro.architectureplayground.redux.Store
 
 class ProcessingInteractor(store: Store<SaleState>, view: View, private val viewState: ViewState) :
     SimpleInteractor<SaleState>(store) {
@@ -19,6 +19,7 @@ class ProcessingInteractor(store: Store<SaleState>, view: View, private val view
     }
 
     override fun accept(state: SaleState) {
+        println("ProcessingInteractor.accept CURRENT_STATE: Accepting State")
         viewState.currentState = state
         if (state.status == Status.COMPLETED)
             success()

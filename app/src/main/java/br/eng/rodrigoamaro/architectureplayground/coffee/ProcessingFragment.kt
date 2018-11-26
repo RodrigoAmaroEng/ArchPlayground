@@ -1,36 +1,17 @@
 package br.eng.rodrigoamaro.architectureplayground.coffee
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import br.eng.rodrigoamaro.architectureplayground.R
-import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
+import br.eng.rodrigoamaro.architectureplayground.android.BaseFragment
+import br.eng.rodrigoamaro.architectureplayground.redux.Interactor
+import br.eng.rodrigoamaro.architectureplayground.redux.Store
 
-class ProcessingFragment : Fragment() {
-    private lateinit var interactor: SimpleInteractor<SaleState>
+class ProcessingFragment : BaseFragment<SaleState, ViewState>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_processing, container, false)
-    }
+    override fun createInteractor(store: Store<SaleState>, view: View): Interactor =
+        ProcessingInteractor(store, view, model)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val act = activity as MainActivity
-        val model = ViewModelProviders.of(this).get(ViewState::class.java)
-        interactor = ProcessingInteractor(act.store, view, model)
-        interactor.turnOn()
-    }
+    override val modelClass: Class<ViewState> = ViewState::class.java
 
-    override fun onDestroyView() {
-        interactor.turnOff()
-        super.onDestroyView()
-    }
+    override val layoutResId: Int = R.layout.fragment_processing
 }

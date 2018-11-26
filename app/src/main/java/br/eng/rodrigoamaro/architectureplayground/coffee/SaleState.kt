@@ -1,8 +1,8 @@
 package br.eng.rodrigoamaro.architectureplayground.coffee
 
 import br.eng.rodrigoamaro.architectureplayground.Money
-import br.eng.rodrigoamaro.architectureplayground.base.State
 import br.eng.rodrigoamaro.architectureplayground.money
+import br.eng.rodrigoamaro.architectureplayground.redux.State
 
 data class SaleState(
     val amount: Money = money { currency = "R$" },

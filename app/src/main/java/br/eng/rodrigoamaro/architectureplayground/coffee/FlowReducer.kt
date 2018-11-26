@@ -1,7 +1,7 @@
 package br.eng.rodrigoamaro.architectureplayground.coffee
 
-import br.eng.rodrigoamaro.architectureplayground.base.Action
-import br.eng.rodrigoamaro.architectureplayground.base.Reducer
+import br.eng.rodrigoamaro.architectureplayground.redux.Action
+import br.eng.rodrigoamaro.architectureplayground.redux.Reducer
 
 class FlowReducer : Reducer<SaleState> {
     override fun reduce(action: Action, state: SaleState): SaleState {

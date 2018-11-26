@@ -1,11 +1,9 @@
-package br.eng.rodrigoamaro.architectureplayground.base
+package br.eng.rodrigoamaro.architectureplayground.redux
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 
-interface Store<S : State> {
+interface Store<S : State> : Dispatcher {
     val middlewareList: List<Middleware<S>>
     val reducerList: List<Reducer<S>>
-    val initialState: S
-    fun dispatch(action: Action)
     fun listen(): BehaviorRelay<S>
 }

@@ -1,8 +1,8 @@
 package br.eng.rodrigoamaro.architectureplayground.coffee
 
 import br.eng.rodrigoamaro.architectureplayground.Money
-import br.eng.rodrigoamaro.architectureplayground.base.Action
-import br.eng.rodrigoamaro.architectureplayground.base.Reducer
+import br.eng.rodrigoamaro.architectureplayground.redux.Action
+import br.eng.rodrigoamaro.architectureplayground.redux.Reducer
 import java.math.RoundingMode
 
 class CashReducer(private val coffeePrice: Money) : Reducer<SaleState> {
