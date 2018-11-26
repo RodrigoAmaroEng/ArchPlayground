@@ -1,39 +1,16 @@
 package br.eng.rodrigoamaro.architectureplayground
 
-import android.preference.PreferenceManager
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import br.eng.rodrigoamaro.architectureplayground.coffee.Api
 import br.eng.rodrigoamaro.architectureplayground.coffee.MainActivity
-import br.eng.rodrigoamaro.architectureplayground.coffee.Receipt
-import io.mockk.coEvery
-import io.mockk.mockk
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext
-import retrofit2.Response
-import java.io.IOException
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -43,28 +20,20 @@ import java.util.concurrent.atomic.AtomicBoolean
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
 
-    private val mockedService: Api = mockk()
+    private val environment =
+        EnvironmentSetup(InstrumentationRegistry.getInstrumentation().targetContext)
+
+    private val robot = CoffeeBuyerRobot()
 
     @get:Rule
     val mRule = ActivityTestRule<MainActivity>(MainActivity::class.java, true, false)
 
     @Before
     fun setUp() {
-        val preferences =
-            PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().targetContext)
-        preferences.edit().putInt("COFFEE_PRICE", 250).apply()
-        coEvery { mockedService.payForCoffee() } returns CompletableDeferred(
-            Response.success(
-                Receipt("123")
-            )
-        )
-        StandAloneContext.getKoin().loadModules(listOf(
-            module {
-                single<CoLauncher>(override = true) { TestCoLauncher() }
-                single(override = true) { mockedService }
-            }
-        ))
-        IdlingRegistry.getInstance().register(CoroutineIdlingResource.default)
+        environment.setCoffeePrice(250)
+        environment.setMockedService()
+        environment.setSuccessServiceResponse()
+        IdlingRegistry.getInstance().register(CoRoutineIdlingResource.default)
     }
 
     @After
@@ -75,84 +44,54 @@ class ExampleInstrumentedTest {
     }
 
     @Test
+    fun checkCoffeeCount() {
+        ActivityScenario.launch(MainActivity::class.java)
+        robot.addCoffee()
+            .addCoffee()
+            .check()
+            .howManyCoffees(2)
+    }
+
+    @Test
     fun tryToBuySomeCoffee() {
         ActivityScenario.launch(MainActivity::class.java)
-        Espresso.onView(withId(R.id.button_increase)).perform(click())
-        Espresso.onView(withText("1")).check(matches(isDisplayed()))
-        Espresso.onView(withText("Continuar")).perform(click())
-        Espresso.onView(withText("Débito")).perform(click())
-        Espresso.onView(withText("Transação concluída!")).check(matches(isDisplayed()))
+        robot.addCoffee()
+            .finishOrder()
+            .selectPaymentMethod(CoffeeBuyerRobot.PaymentMethod.Debit)
+            .check()
+            .transactionSucceeded()
     }
 
     @Test
     fun failToBuyCoffee() {
-        coEvery { mockedService.payForCoffee() } throws IOException()
+        environment.setErrorServiceResponse()
         ActivityScenario.launch(MainActivity::class.java)
-        Espresso.onView(withId(R.id.button_increase)).perform(click())
-        Espresso.onView(withText("Continuar")).perform(click())
-        Espresso.onView(withText("Voucher")).perform(click())
-        Espresso.onView(withText("Transação não completada!")).check(matches(isDisplayed()))
+        robot.addCoffee()
+            .finishOrder()
+            .selectPaymentMethod(CoffeeBuyerRobot.PaymentMethod.Voucher)
+            .check()
+            .transactionNotSucceeded()
     }
 
     @Test
     fun newCoffeePrice() {
-        val preferences =
-            PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().targetContext)
-        preferences.edit().putInt("COFFEE_PRICE", 150).apply()
+        environment.setCoffeePrice(150)
         ActivityScenario.launch(MainActivity::class.java)
-        Espresso.onView(withId(R.id.button_increase)).perform(click())
-        Espresso.onView(withId(R.id.button_increase)).perform(click())
-        Espresso.onView(withText("R$ 3.00")).check(matches(isDisplayed()))
+        robot.addCoffee()
+            .addCoffee()
+            .check()
+            .priceIs("3.00")
     }
 
     @Test
     fun validatingTheBackStack() {
         ActivityScenario.launch(MainActivity::class.java)
-        Espresso.onView(withId(R.id.button_increase)).perform(click())
-        Espresso.onView(withId(R.id.button_increase)).perform(click())
-        Espresso.onView(withText("R$ 5.00")).check(matches(isDisplayed()))
-        Espresso.onView(withText("Continuar")).perform(click())
-        Espresso.onView(withText("Débito")).perform(click())
-        Espresso.pressBack()
-        Espresso.pressBack()
-        Espresso.onView(withId(R.id.button_increase)).check(matches(isEnabled()))
-    }
-
-    class TestCoLauncher : CoLauncher {
-        override fun launchThis(block: suspend CoroutineScope.() -> Unit): Job {
-            return GlobalScope.launch {
-                CoroutineIdlingResource.default.run()
-                println("Launched")
-                launch { block.invoke(this) }.join()
-                println("Operation Finished")
-                CoroutineIdlingResource.default.idle()
-            }
-        }
-    }
-
-    class CoroutineIdlingResource private constructor() : IdlingResource {
-
-        private val isIdleNow = AtomicBoolean(true)
-        private var callback: IdlingResource.ResourceCallback? = null
-        fun run() {
-            println("Running")
-            isIdleNow.set(false)
-        }
-
-        fun idle() {
-            println("Idle")
-            isIdleNow.set(true)
-            callback?.onTransitionToIdle()
-        }
-
-        override fun getName(): String = this::class.java.name
-        override fun isIdleNow() = isIdleNow.get()
-        override fun registerIdleTransitionCallback(callback: IdlingResource.ResourceCallback?) {
-            this.callback = callback
-        }
-
-        companion object {
-            val default = CoroutineIdlingResource()
-        }
+        robot.addCoffee()
+            .finishOrder()
+            .selectPaymentMethod(CoffeeBuyerRobot.PaymentMethod.Debit)
+            .goBack()
+            .goBack()
+            .check()
+            .isAbleToEditSale()
     }
 }
