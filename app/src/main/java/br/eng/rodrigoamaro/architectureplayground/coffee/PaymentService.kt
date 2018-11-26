@@ -1,6 +1,5 @@
 package br.eng.rodrigoamaro.architectureplayground.coffee
 
-
 interface PaymentService {
     suspend fun pay(invoice: SaleState)
 }

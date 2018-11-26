@@ -17,16 +17,15 @@ class MyApplication : Application() {
     private val module = module(override = true) {
         single<Api> {
             Retrofit.Builder()
-                    .baseUrl("http://localhost:8080/")
-                    .addConverterFactory(MoshiConverterFactory.create())
-                    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                    .build().create(Api::class.java)
+                .baseUrl("http://localhost:8080/")
+                .addConverterFactory(MoshiConverterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .build().create(Api::class.java)
         }
         single<CoLauncher> { CoLauncherImpl() }
         single<PaymentService> { PaymentServiceImpl(get()) }
         single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(this@MyApplication) }
         single<Settings> { SettingsImpl(get()) }
-
     }
 
     override fun onCreate() {

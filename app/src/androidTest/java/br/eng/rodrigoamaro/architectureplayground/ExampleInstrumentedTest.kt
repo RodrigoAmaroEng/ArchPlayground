@@ -1,22 +1,29 @@
 package br.eng.rodrigoamaro.architectureplayground
 
 import android.preference.PreferenceManager
-import androidx.test.InstrumentationRegistry
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import br.eng.rodrigoamaro.architectureplayground.coffee.Api
 import br.eng.rodrigoamaro.architectureplayground.coffee.MainActivity
 import br.eng.rodrigoamaro.architectureplayground.coffee.Receipt
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -43,21 +50,28 @@ class ExampleInstrumentedTest {
 
     @Before
     fun setUp() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
+        val preferences =
+            PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().targetContext)
         preferences.edit().putInt("COFFEE_PRICE", 250).apply()
-        coEvery { mockedService.payForCoffee() } returns CompletableDeferred(Response.success(Receipt("123")))
+        coEvery { mockedService.payForCoffee() } returns CompletableDeferred(
+            Response.success(
+                Receipt("123")
+            )
+        )
         StandAloneContext.getKoin().loadModules(listOf(
-                module {
-                    single<CoLauncher>(override = true) { TestCoLauncher() }
-                    single(override = true) { mockedService }
-                }
+            module {
+                single<CoLauncher>(override = true) { TestCoLauncher() }
+                single(override = true) { mockedService }
+            }
         ))
         IdlingRegistry.getInstance().register(CoroutineIdlingResource.default)
     }
 
     @After
     fun tearDown() {
-        IdlingRegistry.getInstance().resources.forEach { IdlingRegistry.getInstance().unregister(it) }
+        IdlingRegistry.getInstance().resources.forEach {
+            IdlingRegistry.getInstance().unregister(it)
+        }
     }
 
     @Test
@@ -82,7 +96,8 @@ class ExampleInstrumentedTest {
 
     @Test
     fun newCoffeePrice() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
+        val preferences =
+            PreferenceManager.getDefaultSharedPreferences(InstrumentationRegistry.getInstrumentation().targetContext)
         preferences.edit().putInt("COFFEE_PRICE", 150).apply()
         ActivityScenario.launch(MainActivity::class.java)
         Espresso.onView(withId(R.id.button_increase)).perform(click())

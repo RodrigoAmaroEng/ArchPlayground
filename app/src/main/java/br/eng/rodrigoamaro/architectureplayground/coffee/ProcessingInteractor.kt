@@ -7,8 +7,8 @@ import br.eng.rodrigoamaro.architectureplayground.R
 import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
 import br.eng.rodrigoamaro.architectureplayground.base.Store
 
-class ProcessingInteractor(store: Store<SaleState>, view: View, private val viewState: ViewState)
-    : SimpleInteractor<SaleState>(store) {
+class ProcessingInteractor(store: Store<SaleState>, view: View, private val viewState: ViewState) :
+    SimpleInteractor<SaleState>(store) {
 
     private val imageStatus: ImageView = view.findViewById(R.id.image_status)
     private val textStatus: TextView = view.findViewById(R.id.text_status)
@@ -24,7 +24,6 @@ class ProcessingInteractor(store: Store<SaleState>, view: View, private val view
             success()
         else if (state.status == Status.FAILED)
             fail()
-
     }
 
     private fun fail() {
@@ -36,5 +35,4 @@ class ProcessingInteractor(store: Store<SaleState>, view: View, private val view
         textStatus.setText(R.string.transaction_suceeded)
         imageStatus.setImageResource(R.drawable.success)
     }
-
 }

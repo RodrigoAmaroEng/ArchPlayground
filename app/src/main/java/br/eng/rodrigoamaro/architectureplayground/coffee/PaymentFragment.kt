@@ -12,8 +12,11 @@ import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
 class PaymentFragment : Fragment() {
     private lateinit var interactor: SimpleInteractor<SaleState>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_payment, container, false)
     }
@@ -30,5 +33,4 @@ class PaymentFragment : Fragment() {
         interactor.turnOff()
         super.onDestroyView()
     }
-
 }

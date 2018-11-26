@@ -6,8 +6,8 @@ import br.eng.rodrigoamaro.architectureplayground.base.Middleware
 import br.eng.rodrigoamaro.architectureplayground.base.Store
 
 class PaymentMiddleware(
-        private val service: PaymentService,
-        private val launcher: CoLauncher
+    private val service: PaymentService,
+    private val launcher: CoLauncher
 ) : Middleware<SaleState> {
     override fun dispatch(action: Action, store: Store<SaleState>): Action {
         println("PaymentMiddleware.dispatch: $action")

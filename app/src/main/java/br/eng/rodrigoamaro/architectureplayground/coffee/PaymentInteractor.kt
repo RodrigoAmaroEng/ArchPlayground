@@ -9,10 +9,11 @@ import br.eng.rodrigoamaro.architectureplayground.base.Store
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 
-class PaymentInteractor(store: Store<SaleState>,
-                        view: View,
-                        private val viewState: ViewState)
-    : SimpleInteractor<SaleState>(store) {
+class PaymentInteractor(
+    store: Store<SaleState>,
+    view: View,
+    private val viewState: ViewState
+) : SimpleInteractor<SaleState>(store) {
 
     private val buttonDebit = view.findViewById<Button>(R.id.button_debit)
     private val buttonCredit = view.findViewById<Button>(R.id.button_credit)
@@ -20,16 +21,30 @@ class PaymentInteractor(store: Store<SaleState>,
 
     init {
         handle(RxView.clicks(buttonDebit)
-                .flatMap { Observable.just(PayAction(Methods.DEBIT), NavigateAction(R.id.to_processing_screen)) })
+            .flatMap {
+                Observable.just(
+                    PayAction(Methods.DEBIT),
+                    NavigateAction(R.id.to_processing_screen)
+                )
+            })
         handle(RxView.clicks(buttonCredit)
-                .flatMap { Observable.just(PayAction(Methods.CREDIT), NavigateAction(R.id.to_processing_screen)) })
+            .flatMap {
+                Observable.just(
+                    PayAction(Methods.CREDIT),
+                    NavigateAction(R.id.to_processing_screen)
+                )
+            })
         handle(RxView.clicks(buttonVoucher)
-                .flatMap { Observable.just(PayAction(Methods.VOUCHER), NavigateAction(R.id.to_processing_screen)) })
+            .flatMap {
+                Observable.just(
+                    PayAction(Methods.VOUCHER),
+                    NavigateAction(R.id.to_processing_screen)
+                )
+            })
         viewState.manageState(store)
     }
 
     override fun accept(state: SaleState?) {
         viewState.currentState = state
     }
-
 }

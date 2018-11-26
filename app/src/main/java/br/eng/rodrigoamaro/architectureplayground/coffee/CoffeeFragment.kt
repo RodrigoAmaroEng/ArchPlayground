@@ -12,8 +12,11 @@ import br.eng.rodrigoamaro.architectureplayground.SimpleInteractor
 class CoffeeFragment : Fragment() {
     private lateinit var interactor: SimpleInteractor<SaleState>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_coffees, container, false)
     }
 
@@ -29,5 +32,4 @@ class CoffeeFragment : Fragment() {
         interactor.turnOff()
         super.onDestroyView()
     }
-
 }

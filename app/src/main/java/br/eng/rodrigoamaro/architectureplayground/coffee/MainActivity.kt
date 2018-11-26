@@ -21,17 +21,19 @@ class MainActivity : AppCompatActivity(), KoinComponent {
         setContentView(R.layout.activity_main)
         store = PaymentStore(get(), get(), get(), navigator)
         supportFragmentManager.beginTransaction()
-                .replace(R.id.my_nav_host_fragment, navigator)
-                .setPrimaryNavigationFragment(navigator) // this is the equivalent to app:defaultNavHost="true"
-                .commit()
+            .replace(R.id.my_nav_host_fragment, navigator)
+            .setPrimaryNavigationFragment(navigator) // this is the equivalent to app:defaultNavHost="true"
+            .commit()
     }
-
-
 }
 
-class PaymentStore(settings: Settings, service: PaymentService, launcher: CoLauncher, navHost: NavHostFragment) : SimpleStore<SaleState>(
-        listOf(PaymentMiddleware(service, launcher), NavigatorMiddleware(navHost)),
-        listOf(PaymentReducer(), CounterReducer(), CashReducer(settings.coffeePrice), FlowReducer()), SaleState())
-
-
-
+class PaymentStore(
+    settings: Settings,
+    service: PaymentService,
+    launcher: CoLauncher,
+    navHost: NavHostFragment
+) : SimpleStore<SaleState>(
+    listOf(PaymentMiddleware(service, launcher), NavigatorMiddleware(navHost)),
+    listOf(PaymentReducer(), CounterReducer(), CashReducer(settings.coffeePrice), FlowReducer()),
+    SaleState()
+)
