@@ -13,8 +13,8 @@ class PaymentMiddleware(
         if (action is PayAction) {
             launcher.launchThis {
                 try {
-                    service.pay(state!!)
-                    dispatcher.dispatch(PayCompletedAction)
+                    val receipt = service.pay(state!!)
+                    dispatcher.dispatch(PayCompletedAction(receipt?.orderNumber))
                 } catch (ex: Throwable) {
                     ex.printStackTrace()
                     dispatcher.dispatch(PayFailedAction)

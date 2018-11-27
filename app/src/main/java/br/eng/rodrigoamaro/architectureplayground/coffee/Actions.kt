@@ -13,7 +13,7 @@ data class NavigateAction(@IdRes val destination: Int) : Action()
 object SetCoffeesAction : Action()
 
 data class PayAction(val method: Methods) : Action()
-object PayCompletedAction : Action()
+data class PayCompletedAction(val orderNumber: String?) : Action()
 object PayFailedAction : Action()
 
 object NewSaleAction : Action()

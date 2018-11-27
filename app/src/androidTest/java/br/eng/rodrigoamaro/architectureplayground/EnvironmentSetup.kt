@@ -3,6 +3,7 @@ package br.eng.rodrigoamaro.architectureplayground
 import android.content.Context
 import android.preference.PreferenceManager
 import androidx.test.espresso.IdlingRegistry
+import br.eng.rodrigoamaro.architectureplayground.coffee.proto.Receipt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -26,10 +27,14 @@ class EnvironmentSetup(private val context: Context) {
     }
 
     fun setSuccessServiceResponse() {
+        val receipt = Receipt.Builder()
+            .amount(300)
+            .orderNumber("1234")
+            .build()
         dispatcher.queue.add(
-            MockResponse().setBody("{\"orderNumber\":\"1234\"}").setResponseCode(
-                200
-            )
+            MockResponse()
+                .setBody(String(receipt.encode()))
+                .setResponseCode(200)
         )
     }
 

@@ -11,14 +11,14 @@ import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.stopKoin
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.wire.WireConverterFactory
 
 class MyApplication : Application() {
     private val module = module(override = true) {
         single<Api> {
             Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
-                .addConverterFactory(MoshiConverterFactory.create())
+                .addConverterFactory(WireConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
                 .build().create(Api::class.java)
         }

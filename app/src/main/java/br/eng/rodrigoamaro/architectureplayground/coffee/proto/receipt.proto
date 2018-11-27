@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package br.eng.rodrigoamaro.architectureplayground.coffee.proto;
+
+option java_outer_classname = "ReceiptProto";
+
+message Receipt {
+    string orderNumber = 1;
+    int32 amount = 2;
+}

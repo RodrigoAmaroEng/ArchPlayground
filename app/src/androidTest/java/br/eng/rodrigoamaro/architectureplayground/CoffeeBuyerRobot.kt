@@ -48,8 +48,8 @@ class SaleResult {
         onView(withText("R$ $price")).check(matches(isDisplayed()))
     }
 
-    fun transactionSucceeded() {
-        onView(withText("Transação concluída!")).check(matches(isDisplayed()))
+    fun transactionSucceeded(orderNumber: String) {
+        onView(withText("Transação '$orderNumber' concluída!")).check(matches(isDisplayed()))
     }
 
     fun transactionNotSucceeded() {

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ArchitecturePlayground</string>
-    <string name="transaction_suceeded">Transação concluída!</string>
+    <string name="transaction_suceeded">Transação \'%s\' concluída!</string>
     <string name="transaction_failed">Transação não completada!</string>
     <string name="action_new_sale">Nova venda</string>
     <string name="action_pay">Pagar</string>

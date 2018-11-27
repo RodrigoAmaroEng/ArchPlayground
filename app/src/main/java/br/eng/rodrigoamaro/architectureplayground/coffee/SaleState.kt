@@ -7,7 +7,8 @@ import br.eng.rodrigoamaro.architectureplayground.redux.State
 data class SaleState(
     val amount: Money = money { currency = "R$" },
     val coffees: Int = 0,
-    val status: Status = Status.READY_TO_SALE
+    val status: Status = Status.READY_TO_SALE,
+    val orderNumber: String? = null
 ) : State
 
 enum class Status {

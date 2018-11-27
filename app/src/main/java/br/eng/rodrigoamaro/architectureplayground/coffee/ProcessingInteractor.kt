@@ -21,7 +21,7 @@ class ProcessingInteractor(store: Store<SaleState>, view: View, private val view
     override fun accept(state: SaleState) {
         viewState.currentState = state
         if (state.status == Status.COMPLETED)
-            success()
+            success(state.orderNumber)
         else if (state.status == Status.FAILED)
             fail()
     }
@@ -31,8 +31,9 @@ class ProcessingInteractor(store: Store<SaleState>, view: View, private val view
         imageStatus.setImageResource(R.drawable.fail)
     }
 
-    private fun success() {
-        textStatus.setText(R.string.transaction_suceeded)
+    private fun success(orderNumber: String?) {
+        val text = imageStatus.resources.getText(R.string.transaction_suceeded).toString()
+        textStatus.text = String.format(text, orderNumber)
         imageStatus.setImageResource(R.drawable.success)
     }
 }

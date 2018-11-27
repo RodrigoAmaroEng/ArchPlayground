@@ -57,7 +57,7 @@ class ExampleInstrumentedTest {
             .finishOrder()
             .selectPaymentMethod(CoffeeBuyerRobot.PaymentMethod.Debit)
             .check()
-            .transactionSucceeded()
+            .transactionSucceeded("1234")
     }
 
     @Test
