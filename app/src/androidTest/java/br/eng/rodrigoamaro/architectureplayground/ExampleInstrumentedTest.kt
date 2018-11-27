@@ -38,9 +38,7 @@ class ExampleInstrumentedTest {
 
     @After
     fun tearDown() {
-        IdlingRegistry.getInstance().resources.forEach {
-            IdlingRegistry.getInstance().unregister(it)
-        }
+        environment.reset()
     }
 
     @Test

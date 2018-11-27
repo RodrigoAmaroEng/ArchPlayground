@@ -19,7 +19,6 @@ class ProcessingInteractor(store: Store<SaleState>, view: View, private val view
     }
 
     override fun accept(state: SaleState) {
-        println("ProcessingInteractor.accept CURRENT_STATE: Accepting State")
         viewState.currentState = state
         if (state.status == Status.COMPLETED)
             success()

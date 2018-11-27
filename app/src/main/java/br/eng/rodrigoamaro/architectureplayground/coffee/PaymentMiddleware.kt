@@ -16,6 +16,7 @@ class PaymentMiddleware(
                     service.pay(state!!)
                     dispatcher.dispatch(PayCompletedAction)
                 } catch (ex: Throwable) {
+                    ex.printStackTrace()
                     dispatcher.dispatch(PayFailedAction)
                 }
             }

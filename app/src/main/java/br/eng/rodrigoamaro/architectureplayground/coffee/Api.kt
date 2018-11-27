@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 interface Api {
     @GET("/coffee/pay")
-    suspend fun payForCoffee(): Deferred<Response<Receipt>>
+    fun payForCoffee(): Deferred<Response<Receipt>>
 }
 
 class Receipt(val orderNumber: String)

@@ -8,12 +8,10 @@ class CoRoutineIdlingResource private constructor() : IdlingResource {
     private val isIdleNow = AtomicBoolean(true)
     private var callback: IdlingResource.ResourceCallback? = null
     fun run() {
-        println("Running")
         isIdleNow.set(false)
     }
 
     fun idle() {
-        println("Idle")
         isIdleNow.set(true)
         callback?.onTransitionToIdle()
     }

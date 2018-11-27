@@ -28,7 +28,6 @@ class CoffeeInteractor(
     }
 
     override fun accept(state: SaleState) {
-        println("CoffeeInteractor.accept CURRENT_STATE: Accepting State")
         viewState.currentState = state
         coffeeCounter.text = state.coffees.toString()
         coffeeCost.text = state.amount.value()

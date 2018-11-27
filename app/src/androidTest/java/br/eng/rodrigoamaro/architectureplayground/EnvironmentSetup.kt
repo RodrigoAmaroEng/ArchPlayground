@@ -2,23 +2,23 @@ package br.eng.rodrigoamaro.architectureplayground
 
 import android.content.Context
 import android.preference.PreferenceManager
-import br.eng.rodrigoamaro.architectureplayground.coffee.Api
-import br.eng.rodrigoamaro.architectureplayground.coffee.Receipt
-import io.mockk.coEvery
-import io.mockk.mockk
-import kotlinx.coroutines.CompletableDeferred
+import androidx.test.espresso.IdlingRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext
-import retrofit2.Response
-import java.io.IOException
+import java.net.HttpURLConnection
 
 class EnvironmentSetup(private val context: Context) {
 
-    private val mockedService: Api = mockk()
+    private val server = MockWebServer()
+    private val dispatcher = CustomDispatcher()
 
     fun setCoffeePrice(price: Int) {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -26,35 +26,47 @@ class EnvironmentSetup(private val context: Context) {
     }
 
     fun setSuccessServiceResponse() {
-        coEvery { mockedService.payForCoffee() } returns CompletableDeferred(
-            Response.success(
-                Receipt("123")
+        dispatcher.queue.add(
+            MockResponse().setBody("{\"orderNumber\":\"1234\"}").setResponseCode(
+                200
             )
         )
     }
 
     fun setErrorServiceResponse() {
-        coEvery { mockedService.payForCoffee() } throws IOException()
+        dispatcher.queue.clear()
+        dispatcher.queue.add(MockResponse().setResponseCode(HttpURLConnection.HTTP_CONFLICT))
     }
 
     fun setMockedService() {
+        server.start(8080)
+        server.setDispatcher(dispatcher)
         StandAloneContext.getKoin().loadModules(listOf(
             module {
                 single<CoLauncher>(override = true) { TestCoLauncher() }
-                single(override = true) { mockedService }
             }
         ))
+    }
+
+    fun reset() {
+        server.close()
+        IdlingRegistry.getInstance().resources.forEach {
+            IdlingRegistry.getInstance().unregister(it)
+        }
     }
 
     class TestCoLauncher : CoLauncher {
         override fun launchThis(block: suspend CoroutineScope.() -> Unit): Job {
             return GlobalScope.launch {
                 CoRoutineIdlingResource.default.run()
-                println("Launched")
                 launch { block.invoke(this) }.join()
-                println("Operation Finished")
                 CoRoutineIdlingResource.default.idle()
             }
         }
+    }
+
+    class CustomDispatcher : Dispatcher() {
+        val queue = mutableListOf<MockResponse>()
+        override fun dispatch(request: RecordedRequest?): MockResponse = queue.removeAt(0)
     }
 }

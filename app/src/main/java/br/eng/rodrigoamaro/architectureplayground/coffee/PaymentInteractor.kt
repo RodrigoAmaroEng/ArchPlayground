@@ -45,7 +45,6 @@ class PaymentInteractor(
     }
 
     override fun accept(state: SaleState?) {
-        println("PaymentInteractor.accept CURRENT_STATE: Accepting State")
         viewState.currentState = state
     }
 }
