@@ -1,0 +1,54 @@
+import java.text.SimpleDateFormat
+
+android {
+    defaultConfig {
+        versionCode getVersionCodeNumber()
+        versionName calculateVersion()
+    }
+
+    sourceSets {
+        nightly.java.srcDirs = sourceSets.release.java.srcDirs
+        releaseCandidate.java.srcDirs = sourceSets.release.java.srcDirs
+    }
+
+    buildTypes {
+        nightly.initWith(buildTypes.release)
+        nightly {
+            versionNameSuffix "-NB-${getBuildSuffix()}"
+        }
+        releaseCandidate.initWith(buildTypes.release)
+        releaseCandidate {
+            versionNameSuffix "-RC${getBuildSuffix()}"
+        }
+    }
+}
+
+def getBuildSuffix() {
+    def nowCal = Calendar.instance
+    def dateFormatter = new SimpleDateFormat("MMddHHmm")
+    return '.' + dateFormatter.format(nowCal.time)
+}
+
+
+def calculateVersion() {
+    Properties data = loadVersionFile()
+    def revision = Integer.parseInt(data['FIX'])
+    def minor = Integer.parseInt(data['MINOR'])
+    def major = Integer.parseInt(data['MAJOR'])
+    return "$major.$minor${revision > 0 ? '.' + revision : ''}"
+}
+
+def getVersionCodeNumber() {
+    return Integer.parseInt(loadVersionFile()['NUMBER'])
+}
+
+def loadVersionFile() {
+    def versionPropsFile = file("$project.rootDir/version.properties")
+    if (versionPropsFile.canRead()) {
+        Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        return versionProps
+    } else {
+        throw new Exception("Could not read version.properties!")
+    }
+}

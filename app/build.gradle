@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply from: '../version.gradle'
 
 jacoco {
     toolVersion = '0.8.2'
@@ -22,8 +23,6 @@ android {
         applicationId "br.eng.rodrigoamaro.architectureplayground"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
