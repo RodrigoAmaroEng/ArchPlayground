@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco'
+apply plugin: 'br.eng.rodrigoamaro.coverage'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply from: '../version.gradle'
 
@@ -12,6 +13,9 @@ jacoco {
 android {
     jacoco {
         version = '0.8.2'
+    }
+    lintOptions {
+        disable 'GradleDependency'
     }
     compileSdkVersion 28
     testOptions.unitTests.includeAndroidResources = true
@@ -72,27 +76,32 @@ dependencies {
     androidTestImplementation 'io.mockk:mockk-android:1.8.12.kotlin13'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
     androidTestUtil 'androidx.test:orchestrator:1.1.0'
+    lintChecks fileTree(dir: 'libs', include: ['lint*.jar'])
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['connectedAndroidTest', 'createDebugCoverageReport']) {
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/*$dispatch$*.*']
-    def debugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "$project.projectDir/src/main/java"
-
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-    executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/**/*.ec'
-    ])
-}
+task jacocoTestReport(dependsOn: ['connectedAndroidTest', 'createDebugCoverageReport'])
+jacocoTestReport.finalizedBy('refineCoverage')
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 apply from: '../syntax.gradle'
+
+coverage {
+    filter {
+        type = "CONTAINS"
+        content = "BuildConfig"
+    }
+    filter {
+        type = "CONTAINS_REGEX"
+        content = "\\/R\$"
+    }
+    filter {
+        type = "CONTAINS_REGEX"
+        content = "\\/R\\\$.*\$"
+    }
+    filter {
+        type = "CONTAINS"
+        content = "com/google"
+    }
+}
