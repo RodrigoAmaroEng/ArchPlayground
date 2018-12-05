@@ -14,14 +14,21 @@ android {
     buildTypes {
         nightly.initWith(buildTypes.release)
         nightly {
-            versionNameSuffix "-NB-${getBuildSuffix()}"
+            versionNameSuffix "-NB-${getVersionCodeNumber()}${getBuildSuffix()}"
         }
         releaseCandidate.initWith(buildTypes.release)
         releaseCandidate {
-            versionNameSuffix "-RC${getBuildSuffix()}"
+            versionNameSuffix "-RC-${getVersionCodeNumber()}${getBuildSuffix()}"
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${project.name}_${variant.buildType.name}_${android.defaultConfig.versionName}${variant.buildType.versionNameSuffix ?: ""}.apk"
         }
     }
 }
+
 
 def getBuildSuffix() {
     def nowCal = Calendar.instance
@@ -50,5 +57,20 @@ def loadVersionFile() {
         return versionProps
     } else {
         throw new Exception("Could not read version.properties!")
+    }
+}
+
+task incrementVersionCode << {
+    Properties versionProps = loadVersionFile()
+    versionProps['NUMBER'] = (Integer.parseInt(loadVersionFile()['NUMBER']) + 1).toString()
+    def properties = new Properties() {
+        @Override
+        public synchronized Enumeration<Object> keys() {
+            return Collections.enumeration(new TreeSet<Object>(super.keySet()))
+        }
+    }
+    properties.putAll(versionProps)
+    file("$project.rootDir/version.properties").withOutputStream {
+        properties.store(it, null)
     }
 }
