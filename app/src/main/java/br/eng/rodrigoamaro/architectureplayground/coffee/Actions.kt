@@ -17,3 +17,5 @@ data class PayCompletedAction(val orderNumber: String?) : Action()
 object PayFailedAction : Action()
 
 object NewSaleAction : Action()
+
+object UndoSaleAction : Action()

@@ -14,6 +14,7 @@ class PaymentReducer : Reducer<SaleState> {
             )
             PayFailedAction -> state.copy(status = Status.FAILED)
             NewSaleAction -> SaleState(Money("R$"), 0)
+            UndoSaleAction -> SaleState(Money("R$"), 0)
             else -> state
         }
     }
