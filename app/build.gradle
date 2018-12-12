@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'jacoco'
 apply plugin: 'br.eng.rodrigoamaro.coverage'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply from: '../version.gradle'
@@ -79,11 +78,14 @@ dependencies {
     lintChecks fileTree(dir: 'libs', include: ['lint*.jar'])
 }
 
-task jacocoTestReport(dependsOn: ['connectedAndroidTest', 'createDebugCoverageReport'])
-jacocoTestReport.finalizedBy('refineCoverage')
+task coverageReport(dependsOn: ['connectedAndroidTest', 'createDebugCoverageReport'])
+coverageReport.finalizedBy('refineCoverage')
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    reports {
+        html.enabled = false
+    }
 }
 apply from: '../syntax.gradle'
 
@@ -104,4 +106,6 @@ coverage {
         type = "CONTAINS"
         content = "com/google"
     }
+    diffCoverageTarget = 90
 }
+
