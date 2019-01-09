@@ -9,6 +9,7 @@ open class SimpleStore<T : State>(
     initialState: T
 ) : Store<T> {
     private val currentState: BehaviorRelay<T> = BehaviorRelay.create()
+    private val dispatcher = PrivateDispatcher()
 
     init {
         currentState.accept(initialState)
@@ -17,17 +18,17 @@ open class SimpleStore<T : State>(
     override fun listen() = currentState
 
     override fun dispatch(action: Action) {
-        Observable.fromIterable(middlewareList)
-            .reduce(action) { act, middleware ->
-                middleware.dispatch(act, this, currentState.value)
-            }
-            .flatMap { act ->
-                Observable.fromIterable(reducerList)
-                    .reduce(currentState.value!!) { state, reducer ->
-                        reducer.reduce(act, state)
-                    }
-            }
-            .doOnSuccess { currentState.accept(it) }
-            .subscribe()
+        middlewareList.forEach { it.dispatch(action, currentState.value, dispatcher) }
+    }
+
+    inner class PrivateDispatcher : Dispatcher {
+        override fun dispatch(action: Action) {
+            Observable.fromIterable(reducerList)
+                .reduce(currentState.value!!) { state, reducer ->
+                    reducer.reduce(action, state)
+                }
+                .doOnSuccess { currentState.accept(it) }
+                .subscribe()
+        }
     }
 }

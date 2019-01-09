@@ -9,7 +9,7 @@ class PaymentMiddleware(
     private val service: PaymentService,
     private val launcher: CoLauncher
 ) : Middleware<SaleState> {
-    override fun dispatch(action: Action, dispatcher: Dispatcher, state: SaleState?): Action {
+    override fun dispatch(action: Action, state: SaleState?, dispatcher: Dispatcher) {
         if (action is PayAction) {
             launcher.launchThis {
                 try {
@@ -21,6 +21,6 @@ class PaymentMiddleware(
                 }
             }
         }
-        return action
+        dispatcher.dispatch(action)
     }
 }

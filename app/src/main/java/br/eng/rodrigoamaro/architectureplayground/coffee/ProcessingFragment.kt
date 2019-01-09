@@ -6,12 +6,12 @@ import br.eng.rodrigoamaro.architectureplayground.android.BaseFragment
 import br.eng.rodrigoamaro.architectureplayground.redux.Interactor
 import br.eng.rodrigoamaro.architectureplayground.redux.Store
 
-class ProcessingFragment : BaseFragment<SaleState, ViewState>() {
+class ProcessingFragment : BaseFragment<SaleState, SaleViewState>() {
 
     override fun createInteractor(store: Store<SaleState>, view: View): Interactor =
         ProcessingInteractor(store, view, model)
 
-    override val modelClass: Class<ViewState> = ViewState::class.java
+    override val modelClass: Class<SaleViewState> = SaleViewState::class.java
 
     override val layoutResId: Int = R.layout.fragment_processing
 }

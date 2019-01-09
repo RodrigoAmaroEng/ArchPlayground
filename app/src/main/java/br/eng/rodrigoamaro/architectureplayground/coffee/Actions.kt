@@ -7,10 +7,7 @@ import br.eng.rodrigoamaro.architectureplayground.redux.Action
 object AddCoffeeAction : Action()
 object RemoveCoffeeAction : Action()
 
-data class RestoreStateAction(val state: SaleState?) : Action()
 data class NavigateAction(@IdRes val destination: Int) : Action()
-
-object SetCoffeesAction : Action()
 
 data class PayAction(val method: Methods) : Action()
 data class PayCompletedAction(val orderNumber: String?) : Action()

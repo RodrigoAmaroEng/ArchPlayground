@@ -6,8 +6,8 @@ import br.eng.rodrigoamaro.architectureplayground.android.BaseFragment
 import br.eng.rodrigoamaro.architectureplayground.redux.Interactor
 import br.eng.rodrigoamaro.architectureplayground.redux.Store
 
-class PaymentFragment : BaseFragment<SaleState, ViewState>() {
-    override val modelClass: Class<ViewState> = ViewState::class.java
+class PaymentFragment : BaseFragment<SaleState, SaleViewState>() {
+    override val modelClass: Class<SaleViewState> = SaleViewState::class.java
 
     override val layoutResId: Int = R.layout.fragment_payment
 

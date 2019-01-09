@@ -11,7 +11,7 @@ import com.jakewharton.rxbinding2.view.RxView
 class CoffeeInteractor(
     store: Store<SaleState>,
     view: View,
-    private val viewState: ViewState
+    private val viewState: SaleViewState
 ) : SimpleInteractor<SaleState>(store) {
 
     private val coffeeCounter: TextView = view.findViewById(R.id.coffee_counter)

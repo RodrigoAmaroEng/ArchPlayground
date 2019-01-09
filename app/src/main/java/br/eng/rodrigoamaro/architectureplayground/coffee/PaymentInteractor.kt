@@ -12,7 +12,7 @@ import io.reactivex.Observable
 class PaymentInteractor(
     store: Store<SaleState>,
     view: View,
-    private val viewState: ViewState
+    private val viewState: SaleViewState
 ) : SimpleInteractor<SaleState>(store) {
 
     private val buttonDebit = view.findViewById<Button>(R.id.button_debit)

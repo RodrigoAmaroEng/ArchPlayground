@@ -7,6 +7,7 @@ import br.eng.rodrigoamaro.architectureplayground.R
 import br.eng.rodrigoamaro.architectureplayground.Settings
 import br.eng.rodrigoamaro.architectureplayground.android.BaseActivity
 import br.eng.rodrigoamaro.architectureplayground.redux.SimpleStore
+import br.eng.rodrigoamaro.architectureplayground.redux.ViewState
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 
@@ -25,6 +26,8 @@ class MainActivity : BaseActivity<SaleState>(), KoinComponent {
             .commit()
     }
 }
+
+class SaleViewState : ViewState<SaleState>()
 
 class PaymentStore(
     settings: Settings,

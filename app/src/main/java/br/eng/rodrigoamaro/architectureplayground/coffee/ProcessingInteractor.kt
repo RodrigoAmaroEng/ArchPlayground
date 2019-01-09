@@ -7,7 +7,11 @@ import br.eng.rodrigoamaro.architectureplayground.R
 import br.eng.rodrigoamaro.architectureplayground.redux.SimpleInteractor
 import br.eng.rodrigoamaro.architectureplayground.redux.Store
 
-class ProcessingInteractor(store: Store<SaleState>, view: View, private val viewState: ViewState) :
+class ProcessingInteractor(
+    store: Store<SaleState>,
+    view: View,
+    private val viewState: SaleViewState
+) :
     SimpleInteractor<SaleState>(store) {
 
     private val imageStatus: ImageView = view.findViewById(R.id.image_status)
