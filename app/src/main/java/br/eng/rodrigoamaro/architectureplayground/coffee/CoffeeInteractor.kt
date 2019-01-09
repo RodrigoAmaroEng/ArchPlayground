@@ -14,8 +14,8 @@ class CoffeeInteractor(
     private val viewState: SaleViewState
 ) : SimpleInteractor<SaleState>(store) {
 
-    private val coffeeCounter: TextView = view.findViewById(R.id.coffee_counter)
-    private val coffeeCost: TextView = view.findViewById(R.id.coffee_cost)
+    private val coffeeCounter: TextView = view.findViewById(R.id.text_coffee_counter)
+    private val coffeeCost: TextView = view.findViewById(R.id.text_coffee_cost)
     private val decreaseButton: Button = view.findViewById(R.id.button_decrease)
     private val increaseButton: Button = view.findViewById(R.id.button_increase)
     private val paymentButton: Button = view.findViewById(R.id.button_pay)
